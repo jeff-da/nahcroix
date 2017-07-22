@@ -33,16 +33,20 @@ export default class App extends React.Component {
     data.append('file', this.state.image);
     axios.post('http://54.161.226.173:9000', data).then();*/
     const data = new FormData();
+    //data.append('name', 'filename');
+    console.log(this.state.image);
     data.append('file', {
       uri: this.state.image,
-      type: 'image/jpeg', // or photo.type
-      name: 'nahPhotoImg'
+      type: 'image/jpg', // or photo.type
+      name: 'coolimg.jpg'
     });
-    fetch('http://54.161.226.173:9000', {
-      method: 'post',
+    fetch('http://54.161.226.173:5000', {
+      //header: { 'content-type': 'multipart/form-data' },
+      method: 'POST',
       body: data
     }).then(res => {
-      console.log(res)
+      console.log(res);
+      console.log(res._bodyText);
     });
   }
 
