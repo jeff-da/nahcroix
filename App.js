@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, Image, View } from 'react-native';
+import { Button, Image, View, Text, Alert } from 'react-native';
 import { ImagePicker } from 'expo';
 import axios from 'axios';
 
 export default class App extends React.Component {
   state = {
     image: null,
+    text: '',
   };
 
   render() {
@@ -14,16 +15,12 @@ export default class App extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Button
-          title="Open camera to pick an image"
-          onPress={this._pickImage}
+          title="Open camera to take an image"
+          onPress={this._pickImage.bind(this)}
         />
         {image &&
           <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-
-      <Button
-        title="Click here to send image"
-        onPress={this._sendImage.bind(this)}
-      />
+      <Text style={{fontSize: 50}}>{this.state.text}</Text>
       </View>
     );
   }
@@ -46,6 +43,15 @@ export default class App extends React.Component {
       body: data
     }).then(res => {
       console.log(res);
+      if (res._bodyText === '0') {
+        this.setState({ text: 'LA CROIX!!!' });
+        Alert.alert(
+          'You just took a photo of...',
+          'LA CROIX!!!!',
+        )
+      } else {
+        this.setState({ text: 'NOT LA CROIX!!!' });
+      }
       console.log(res._bodyText);
     });
   }
@@ -60,6 +66,7 @@ export default class App extends React.Component {
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
+      this._sendImage();
     }
   };
 }
